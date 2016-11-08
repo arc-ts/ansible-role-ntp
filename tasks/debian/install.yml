@@ -1,0 +1,7 @@
+- name: Install NTP Package
+  package: name='ntp={{ ntp_version }}*' state=present
+  when: ntp_version is defined
+
+- name: Install Latest NTP Package
+  package: name='ntp' state=latest
+  when: ntp_version is not defined

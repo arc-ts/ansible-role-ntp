@@ -1,0 +1,271 @@
+{# ------------------------- #}
+{# tinker            <hash>  #}
+{# ------------------------- #}
+{# tinker directive should be the first config option according to vmware #}
+{# https://kb.vmware.com/selfservice/microsites/search.do?cmd=displayKC&externalId=1006427 #}
+{%- if ntp_config_tinker is defined %}
+tinker
+{%- for key, value in ntp_config_tinker.iteritems() %}
+{%- if value is none %} {{ key }} {% else %} {{ key }} {{ value }}{% endif %}
+{%- endfor -%}
+{% endif %}
+
+{# ------------------------- #}
+{# Access Control:           #}
+{# discard            <hash> #}
+{# restrict           <hash> #}
+{# ------------------------- #}
+
+{%- if ntp_config_discard is defined -%}
+discard
+{%- for key, value in ntp_config_discard.iteritems() %}
+{%- if value is none %} {{ key }} {% else %} {{ key }} {{ value }}{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if ntp_config_restrict is defined -%}
+{% for service, config in ntp_config_restrict.iteritems() %}
+restrict {{ service }}
+{%- if config is not none %}
+{%- for key, value in config.iteritems() %}
+{% if value is none %} {{ key }} {%- else %} {{ key }} {{ value }}{% endif %}
+{% endfor %}
+{% endif %}
+
+{% endfor %}
+{% endif %}
+
+{# ------------------------- #}
+{# Authentication:           #}
+{# automax             <int> #}
+{# controlkey          <int> #}
+{# crypto             <hash> #}
+{# keys             <string> #}
+{# keysdir          <string> #}
+{# requestkey          <int> #}
+{# revoke              <int> #}
+{# trustedkey        [<int>] #}
+{# ------------------------- #}
+
+{%- if ntp_config_automax is defined -%}
+automax {{ ntp_config_automax }}
+{% endif %}
+
+{%- if ntp_config_controlkey is defined -%}
+controlkey {{ ntp_config_controlkey }}
+{% endif %}
+
+{%- if ntp_config_crypto is defined -%}
+crypto
+{%- for key, value in ntp_config_crypto.iteritems() %}
+{%- if value is none %} {{ key }} {% else %} {{ key }} {{ value }}{% endif %}
+{%- endfor -%}
+{% endif %}
+
+{%- if ntp_config_keys is defined -%}
+keys {{ ntp_config_keys }}
+{% endif %}
+
+{%- if ntp_config_keysdir is defined -%}
+keysdir {{ ntp_config_keysdir }}
+{% endif %}
+
+{%- if ntp_config_requestkey is defined -%}
+requestkey {{ ntp_config_requestkey }}
+{% endif %}
+
+{%- if ntp_config_revoke is defined -%}
+revoke {{ ntp_config_revoke }}
+{% endif %}
+
+{%- if ntp_config_trustedkey is defined -%}
+trustedkey
+{%- for key, value in ntp_config_trustedkey.iteritems() %}
+{%- if value is none %} {{ key }} {% else %} {{ key }} {{ value }}{% endif %}
+{% endfor %}
+{% endif %}
+
+{# ------------------------- #}
+{# Monitoring:               #}
+{# filegen            <hash> #}
+{# statsdir         <string> #}
+{# ------------------------- #}
+
+{%- if ntp_config_filegen is defined %}
+{% for stat, config in ntp_config_filegen.iteritems() %}
+filegen {{ stat }}
+{%- for key, value in config.iteritems() %}
+{% if value is none %} {{ key }} {%- else %} {{ key }} {{ value }}{% endif %}
+{% endfor %}
+
+{% endfor %}
+{% endif %}
+
+{%- if ntp_config_statsdir is defined -%}
+statsdir {{ ntp_config_statsdir }}
+{% endif %}
+
+{# ------------------------- #}
+{# Server:                   #}
+{# broadcast          <hash> #}
+{# broadcastclient  <string> #}
+{# manycastclient     <hash> #}
+{# manycastserver     <hash> #}
+{# multicastclient    <hash> #}
+{# peer               <hash> #}
+{# pool               <hash> #}
+{# server/fudge       <hash> #}
+{# ------------------------- #}
+
+{%- if ntp_config_broadcast is defined %}
+{% for broadcast_addr, config in ntp_config_broadcast.iteritems() %}
+broadcast {{ broadcast_addr }}
+{%- for key, value in config.iteritems() %}
+{% if value is none %} {{ key }} {%- else %} {{ key }} {{ value }}{% endif %}
+{% endfor %}
+
+{% endfor %}
+{% endif %}
+
+{%- if ntp_config_broadcastclient is defined -%}
+broadcastclient {{ ntp_config_broadcastclient }}
+{% endif %}
+
+{%- if ntp_config_manycastclient is defined %}
+{% for client, config in ntp_config_manycastclient.iteritems() %}
+manycastclient {{ client }}
+{%- for key, value in config.iteritems() %}
+{% if value is none %} {{ key }} {%- else %} {{ key }} {{ value }}{% endif %}
+{% endfor %}
+
+{% endfor %}
+{% endif %}
+
+{%- if ntp_config_manycastserver is defined %}
+{% for server, config in ntp_config_manycastserver.iteritems() %}
+manycastserver {{ server }}
+{%- for key, value in config.iteritems() %}
+{% if value is none %} {{ key }} {%- else %} {{ key }} {{ value }}{% endif %}
+{% endfor %}
+
+{% endfor %}
+{% endif %}
+
+{%- if ntp_config_peer is defined %}
+{% for peer, config in ntp_config_peer.iteritems() %}
+peer {{ peer }}
+{%- for key, value in config.iteritems() %}
+{% if value is none %} {{ key }} {%- else %} {{ key }} {{ value }}{% endif %}
+{% endfor %}
+
+{% endfor %}
+{% endif %}
+
+{%- if ntp_config_pool is defined %}
+{% for pool, config in ntp_config_pool.iteritems() %}
+pool {{ pool }}
+{%- for key, value in config.iteritems() %}
+{% if value is none %} {{ key }} {%- else %} {{ key }} {{ value }}{% endif %}
+{% endfor %}
+
+{% endfor %}
+{% endif %}
+
+{# if a server key exists in both ntp_config_server and ntp_config_fudge, the fudge statement #}
+{# will immediately follow it #}
+
+{%- if ntp_config_server is defined %}
+{% for server, config in ntp_config_server.iteritems() %}
+server {{ server }}
+{%- for key, value in config.iteritems() %}
+{% if value is none %} {{ key }} {%- else %} {{ key }} {{ value }}{% endif %}
+{% endfor %}
+
+{% if ntp_config_fudge is defined and ntp_config_fudge[server] is defined %}
+fudge {{ server }}
+{%- for f_key, f_value in ntp_config_fudge[server].iteritems() %}
+{% if f_value is none %} {{ f_key }} {%- else %} {{ f_key }} {{ f_value }}{% endif %}
+{% endfor %}
+
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{# ------------------------- #}
+{# Misc:                     #}
+{# broadcastdelay      <int> #}
+{# driftfile        <string> #}
+{# enable/disable [<string>] #}
+{# interface          <hash> #}
+{# leapfile         <string> #}
+{# logconfig        <string> #}
+{# logfile          <string> #}
+{# tos                <hash> #}
+{# trap               <hash> #}
+{# ttl                 [int] #}
+{# ------------------------- #}
+
+{%- if ntp_config_broadcastdelay is defined -%}
+broadcastdelay {{ ntp_config_broadcastdelay }}
+{% endif %}
+
+{%- if ntp_config_driftfile is defined -%}
+driftfile {{ ntp_config_driftfile }}
+{% endif %}
+
+{%- if ntp_config_enable is defined -%}
+enable
+{%- for key, value in ntp_config_enable.iteritems() %}
+{%- if value is none %} {{ key }} {% else %} {{ key }} {{ value }}{% endif %}
+{%- endfor -%}
+{% endif %}
+
+{%- if ntp_config_disable is defined -%}
+disable
+{%- for key, value in ntp_config_disable.iteritems() %}
+{%- if value is none %} {{ key }} {% else %} {{ key }} {{ value }}{% endif %}
+{%- endfor -%}
+{% endif %}
+
+{%- if ntp_config_interface is defined %}
+{% for interface, config in ntp_config_interface.iteritems() %}
+interface {{ interface }}
+{%- for key, value in config.iteritems() %}
+{% if value is none %} {{ key }} {%- else %} {{ key }} {{ value }}{% endif %}
+{% endfor %}
+
+{% endfor %}
+{% endif %}
+
+{%- if ntp_config_leapfile is defined -%}
+leapfile {{ ntp_config_leapfile }}
+{% endif %}
+
+{%- if ntp_config_logconfig is defined -%}
+logfile {{ ntp_config_logconfig }}
+{% endif %}
+
+{%- if ntp_config_logfile is defined -%}
+logfile {{ ntp_config_logfile }}
+{% endif %}
+
+{%- if ntp_config_tos is defined -%}
+tos
+{%- for key, value in ntp_config_tos.iteritems() %}
+{%- if value is none %} {{ key }} {% else %} {{ key }} {{ value }}{% endif %}
+{%- endfor -%}
+{% endif %}
+
+{%- if ntp_config_trap is defined -%}
+trap
+{%- for key, value in ntp_config_trap.iteritems() %}
+{%- if value is none %} {{ key }} {% else %} {{ key }} {{ value }}{% endif %}
+{%- endfor -%}
+{% endif %}
+
+{%- if ntp_config_ttl is defined -%}
+ttl
+{%- for key, value in ntp_config_ttl.iteritems() %}
+{%- if value is none %} {{ key }} {% else %} {{ key }} {{ value }}{% endif %}
+{%- endfor -%}
+{% endif %}

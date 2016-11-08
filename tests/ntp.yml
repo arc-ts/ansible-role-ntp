@@ -1,0 +1,31 @@
+---
+- hosts: localhost
+  remote_user: root
+  roles:
+    - ntp
+  vars:
+    ntp_manage_keys: true
+    ntp_keys_ids:
+      1:
+        type: M
+        key: TestKey
+      22:
+        type: M
+        key: TestKey2
+    ntp_config_discard:
+      minimum: 2
+      average: 3
+    ntp_config_statsdir: /var/log/ntpstats
+    ntp_config_filegen:
+      loopstats:
+        file: loopstats
+        type: day
+        enable:
+      peerstats:
+        file: peerstats
+        type: day
+        enable:
+      clockstats:
+        file: clockstats
+        type: day
+        enable:

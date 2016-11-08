@@ -1,0 +1,43 @@
+---
+
+- name: CONFIG - Set NTP Facts
+  set_fact:
+    ntp_config_driftfile: '{{ ntp_config_driftfile|default(_ntp_config_driftfile) }}'
+
+- name: CONFIG - Create NTP Statsdir
+  file:
+    path: '{{ ntp_config_statsdir }}'
+    state: directory
+    owner: ntp
+    group: ntp
+    mode: '0755'
+  when: ntp_config_statsdir is defined
+
+- name: CONFIG - Render NTP Config file
+  template:
+    src: ntp.conf.j2
+    dest: /etc/ntp.conf
+    owner: root
+    group: root
+    mode: '0644'
+  register: _ntp_conf
+
+- name: CONFIG - Execute Systemd Daemon-Reload
+  command: systemctl daemon-reload
+  when: (_ntp_conf.changed) and
+        (ansible_service_mgr == 'systemd')
+
+- name: CONFIG - Enable and Start NTP Service
+  service:
+    name: '{{ _ntp_service_name }}'
+    enabled: true
+    state: started
+  register: _ntp_service_status
+
+- name: CONFIG - Restart NTP Service
+  service:
+    name: '{{ _ntp_service_name }}'
+    enabled: true
+    state: restarted
+  when: (_ntp_conf.changed) and
+        (_ntp_service_status.changed == false)

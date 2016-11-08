@@ -1,0 +1,102 @@
+---
+
+# ntp_version
+
+ntp_manage_keys: false
+ntp_manage_leapfile: true
+
+
+# ntp_keys_ids: {}
+#  id: { type:, key: }
+# ntp_keysfile_file: os specific
+ntp_keys_file_owner: root
+ntp_keys_file_group: root
+ntp_keys_file_mode: '0600'
+
+# ntp_leapfile_src:
+ntp_leapfile_uri: https://www.ietf.org/timezones/data/leap-seconds.list
+ntp_leapfile_uri_timeout: 60
+# ntp_leapfile_uri_user
+# ntp_leapfile_uri_password
+ntp_leapfile_file: /etc/ntp/leapfile-seconds
+ntp_leapfile_file_owner: ntp
+ntp_leapfile_file_group: ntp
+ntp_leapfile_file_mode: '0644'
+
+########## Access Control ####################
+# ntp_config_discard                    <hash>
+# ntp_config_restrict                   <hash>
+
+ntp_config_restrict:
+  '-6 default':
+    kod:
+    notrap:
+    nomodify:
+    nopeer:
+    noquery:
+    limited:
+  '-4 default':
+    kod:
+    notrap:
+    nomodify:
+    nopeer:
+    noquery:
+    limited:
+  '127.0.0.1':
+  '::1':
+  source:
+    nomodify:
+    noquery:
+    notrap:
+
+########## Authentication ####################
+# ntp_config_automax                     <int>
+# ntp_config_controlkey                  <int>
+# ntp_config_crypto                     <hash>
+# ntp_config_keys                     <string>
+# ntp_config_keysdir                  <string>
+# ntp_config_requestkey                  <int>
+# ntp_config_revoke                      <int>
+# ntp_config_trustedkey                 <hash>
+
+########## Monitoring ########################
+# ntp_config_filegen                    <hash>
+# ntp_config_statsdir                 <string>
+
+########## Server ############################
+# ntp_config_broadcast                  <hash>
+# ntp_config_broadcastclient          <string>
+# ntp_config_manycastclient             <hash>
+# ntp_config_manycastserver             <hash>
+# ntp_config_multicastclient            <hash>
+# ntp_config_peer                       <hash>
+# ntp_config_pool                       <hash>
+# ntp_config_server                     <hash>
+# ntp_config_fudge                      <hash>
+
+ntp_config_server:
+  '0.pool.ntp.org':
+    iburst:
+  '1.pool.ntp.org':
+    iburst:
+  '2.pool.ntp.org':
+    iburst:
+  '3.pool.ntp.org':
+    iburst:
+
+########## Misc ##############################
+# ntp_config_broadcastdelay              <int>
+# ntp_config_driftfile                <string>
+# ntp_config_disable                    <hash>
+# ntp_config_enable                     <hash>
+# ntp_config_interface                  <hash>
+# ntp_config_leapfile                 <string>
+# ntp_config_logconfig                <string>
+# ntp_config_logfile                  <string>
+# ntp_config_tinker                     <hash>
+# ntp_config_tos                        <hash>
+# ntp_config_trap                       <hash>
+# ntp_config_ttl                        <hash>
+
+ntp_config_tinker:
+  panic: 0

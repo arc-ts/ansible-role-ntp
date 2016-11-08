@@ -1,0 +1,13 @@
+---
+
+- name: KEYS - Set NTP Facts
+  set_fact:
+    ntp_config_keys: '{{ ntp_keys_file_file|default(_ntp_config_keys) }}'
+
+- name: KEYS - Render Key File
+  template:
+    src: keys.j2
+    dest: '{{ ntp_config_keys }}'
+    owner: '{{ ntp_keys_file_owner }}'
+    group: '{{ ntp_keys_file_group }}'
+    mode: '{{ ntp_keys_file_mode }}'

@@ -1,0 +1,3 @@
+{%- for id, config in ntp_keys_ids.iteritems() %}
+{{ id }} {{ config['type'] }} {{ config['key'] }}
+{% endfor %}

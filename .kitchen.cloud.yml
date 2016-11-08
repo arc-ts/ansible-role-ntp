@@ -1,0 +1,72 @@
+---
+
+driver:
+  name: ec2
+  aws_ssh_key_id: <%= ENV['AWS_SSH_KEY_ID'] %>
+  security_group_ids: [ "<%= ENV['AWS_SGROUP_ID'] %>" ]
+  region: <%= ENV['AWS_REGION'] %>
+  availability_zone: <% ENV['AWS_AVAILABILITY_ZONE'] %>
+  instance_type: <%= ENV['AWS_INSTANCE_TYPE'] || 't2.micro' %>
+  associate_public_ip: true
+  require_chef_omnibus: false
+  tags:
+    'ansible-role': ansible-role-consul-agent
+
+
+transport:
+  ssh_key: <%= ENV['KITCHEN_SSH_KEY'] %>
+  connection_timeout: 60
+  connection_retries: 10
+  max_ssh_sessions: 4
+
+
+provisioner:
+  name: ansible_playbook
+  hosts: ntp
+  sudo_command: sudo -E -H
+  role_name: ntp
+  require_ansible_repo: false
+  require_ansible_source: true
+  require_ansible_omnibus: true
+  require_chef_for_busser: false
+  require_ruby_for_busser: false
+  ansible_verbose: true
+  ansible_verbosity: warn
+  idempotency_test: true
+
+
+verifier:
+  name: shell
+
+
+# KITCHEN_SSH_KEY must be set manually as it is not passed during the verification step
+suites:
+  - name: ntp
+    provisioner:
+      playbook: tests/ntp.yml
+    verifier:
+      command: KITCHEN_SSH_KEY=<%= ENV['KITCHEN_SSH_KEY'] %> PLAYBOOK=tests/ntp.yml bundle exec rspec -c -I serverspec
+  - name: verson-centos
+    provisioner:
+      playbook: tests/version-centos.yml
+    verifier:
+      command: KITCHEN_SSH_KEY=<%= ENV['KITCHEN_SSH_KEY'] %> PLAYBOOK=tests/version-centos.yml bundle exec rspec -c -I serverspec
+    includes:
+      - centos-7
+  - name: verson-debian
+    provisioner:
+      playbook: tests/version-debian.yml
+    verifier:
+      command: KITCHEN_SSH_KEY=<%= ENV['KITCHEN_SSH_KEY'] %> PLAYBOOK=tests/version-debian.yml bundle exec rspec -c -I serverspec
+    includes:
+      - debian-8
+      - ubuntu-14.04
+
+
+# Default for centos-7 image is to persist the root volume.
+# The below overrides that.
+platforms:
+  - name: centos-7
+  - name: debian-8
+  - name: ubuntu-14.04
+  - name: ubuntu-16.04

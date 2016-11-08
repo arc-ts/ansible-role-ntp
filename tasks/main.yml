@@ -1,0 +1,19 @@
+---
+# tasks file for ansible-role-ntp
+
+- name: MAIN - Load OS Specific Variables
+  include_vars: '{{ ansible_os_family|lower }}.yml'
+
+- name: MAIN - Install NTP
+  include: '{{ ansible_os_family|lower }}/install.yml'
+
+- name: MAIN - Config NTP Keys
+  include: keys.yml
+  when: ntp_manage_keys|bool == true
+
+- name: MAIN - Config NTP leapfile
+  include: leapfile.yml
+  when: ntp_manage_leapfile|bool == true
+
+- name: MAIN - Config NTP
+  include: config.yml

@@ -1,0 +1,41 @@
+---
+
+- name: LEAPFILE - Set NTP Facts
+  set_fact:
+    ntp_config_leapfile: '{{ ntp_leapfile_file }}'
+
+- name: LEAPFILE - Test if Destination Exists
+  stat: path='{{ ntp_config_leapfile|dirname }}'
+  register: _leapfile_dir
+
+- name: LEAPFILE - Create Destination Directory
+  file:
+    path: '{{ ntp_config_leapfile|dirname }}'
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  when: _leapfile_dir.stat.exists == false
+
+- name: LEAPFILE - Fetch Leapfile
+  get_url:
+    url: '{{ ntp_leapfile_uri }}'
+    dest: '{{ ntp_config_leapfile }}'
+    owner: '{{ ntp_leapfile_file_owner }}'
+    group: '{{ ntp_leapfile_file_group }}'
+    mode: '{{ ntp_leapfile_file_mode }}'
+    timeout: '{{ ntp_leapfile_url_timeout|default(omit) }}'
+    url_username: '{{ ntp_leapfile_uri_user|default(omit) }}'
+    url_password: '{{ ntp_leapfile_uri_password|default(omit) }}'
+  when: (ntp_leapfile_uri is defined) and
+        (ntp_leapfile_src is not defined)
+
+- name: LEAPFILE - Copy Leapfile
+  copy:
+    src: '{{ ntp_leapfile_src }}'
+    dest: '{{ ntp_config_leapfile }}'
+    owner: '{{ ntp_leapfile_file_owner }}'
+    group: '{{ ntp_leapfile_file_group }}'
+    mode: '{{ ntp_leapfile_file_mode }}'
+  when: (ntp_leapfile_src is defined) and
+        (ntp_leapfile_uri is not defined)

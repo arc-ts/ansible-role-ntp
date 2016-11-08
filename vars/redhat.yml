@@ -1,0 +1,5 @@
+---
+
+_ntp_config_keys: /etc/ntp/keys
+_ntp_config_driftfile: /var/lib/ntp/drift
+_ntp_service_name: ntpd
