@@ -74,11 +74,13 @@ Role Variables
 
 ### Execution Control
 
-|     Variable Name     | Default |                     Description                    |
-|:---------------------:|:-------:|:--------------------------------------------------:|
-|  `ntp_manage_keyfile` |  false  |  Enables or disables management of the NTP keyfile |
-| `ntp_manage_leapfile` |   true  | Enables or disables management of the NTP leapfile |
-|     `ntp_version`     |    -    |         The version of NTP to be installed         |
+|         Variable Name         | Default |                                    Description                                    |
+|:-----------------------------:|:-------:|:---------------------------------------------------------------------------------:|
+|  `external_dependency_delay`  |    20   | The time in seconds between external dependency retries. (repos, keyservers, etc) |
+| `external_dependnecy_retries` |    6    |         The number of retries to attempt accessing an external dependency.        |
+|      `ntp_manage_keyfile`     |  false  |                 Enables or disables management of the NTP keyfile                 |
+|     `ntp_manage_leapfile`     |   true  |                 Enables or disables management of the NTP leapfile                |
+|         `ntp_version`         |    -    |                         The version of NTP to be installed                        |
 
 ### Key File
 

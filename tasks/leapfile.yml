@@ -27,6 +27,10 @@
     timeout: '{{ ntp_leapfile_url_timeout|default(omit) }}'
     url_username: '{{ ntp_leapfile_uri_user|default(omit) }}'
     url_password: '{{ ntp_leapfile_uri_password|default(omit) }}'
+  register: _external_dependency_success
+  until: _external_dependency_success|success
+  retries: '{{ external_dependency_retries }}'
+  delay: '{{ external_dependency_delay }}'
   when: (ntp_leapfile_uri is defined) and
         (ntp_leapfile_src is not defined)
 

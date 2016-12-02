@@ -1,7 +1,15 @@
 - name: Install NTP Package
   package: name='ntp-{{ ntp_version }}*' state=present
+  register: _external_dependency_success
+  until: _external_dependency_success|success
+  retries: '{{ external_dependency_retries }}'
+  delay: '{{ external_dependency_delay }}'
   when: ntp_version is defined
 
 - name: Install Latest NTP Package
   package: name='ntp' state=latest
+  register: _external_dependency_success
+  until: _external_dependency_success|success
+  retries: '{{ external_dependency_retries }}'
+  delay: '{{ external_dependency_delay }}'
   when: ntp_version is not defined
